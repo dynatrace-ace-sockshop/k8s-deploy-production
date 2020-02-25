@@ -27,7 +27,7 @@ pipeline {
           sh "sed -i \"s#image: .*#image: `kubectl -n staging get deployment -o jsonpath='{.items[*].spec.template.spec.containers[0].image}' --field-selector=metadata.name=queue-master`#\" queue-master.yml"
           sh "sed -i \"s#image: .*#image: `kubectl -n staging get deployment -o jsonpath='{.items[*].spec.template.spec.containers[0].image}' --field-selector=metadata.name=shipping`#\" shipping.yml"
           sh "sed -i \"s#image: .*#image: `kubectl -n staging get deployment -o jsonpath='{.items[*].spec.template.spec.containers[0].image}' --field-selector=metadata.name=user`#\" user.yml"
-          env.CARTS_DT_PROPS = "${sh(script: 'export CARTS_DT_PROPS=`kubectl -n staging get deployment  -o jsonpath=\'{.items[*].spec.template.spec.containers[0].env[?(@.name==\"DT_CUSTOM_PROP\")].value}\' --field-selector=metadata.name=carts`', returnStdout: true)}"
+          env.CARTS_DT_PROPS = "${sh(script: 'kubectl -n staging get deployment  -o jsonpath=\'{.items[*].spec.template.spec.containers[0].env[?(@.name==\"DT_CUSTOM_PROP\")].value}\' --field-selector=metadata.name=carts', returnStdout: true)}"
           sh "printenv | sort"
           sh "sed -i \"s#value: \"DT_CUSTOM_PROP_PLACEHOLDER\".*#value: \"${env.CARTS_DT_PROPS}#\" carts.yml"
           sh "cat carts.yml"
