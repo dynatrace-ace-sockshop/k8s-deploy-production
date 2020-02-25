@@ -31,7 +31,7 @@ pipeline {
             env.CARTS_DT_PROPS = "${sh(script:'kubectl -n staging get deployment  -o jsonpath=\'{.items[*].spec.template.spec.containers[0].env[?(@.name==\"DT_CUSTOM_PROP\")].value}\' --field-selector=metadata.name=carts', returnStdout: true)}"
           }
           sh "printenv | sort"
-          sh "sed -i \"s#value: \"DT_CUSTOM_PROP_PLACEHOLDER\".*#value: \"${env.CARTS_DT_PROPS}#\" carts.yml"
+          sh 'sed -i "s#value: \"DT_CUSTOM_PROP_PLACEHOLDER\".*#value: \"${env.CARTS_DT_PROPS}\"#" carts.yml'
           sh "cat carts.yml"
           sh "kubectl -n production apply -f ."
         }
