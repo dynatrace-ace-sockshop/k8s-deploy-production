@@ -63,7 +63,7 @@ pipeline {
           script {
             def status = dt_createUpdateAppDetectionRule (
               dtAppName : "sockshop.production",
-              pattern : "http://${env.FRONT_END_IP}",
+              pattern : "http://${env.FRONT_END_IP}:8080",
               applicationMatchType: "CONTAINS",
               applicationMatchTarget: "URL"
             )
