@@ -52,7 +52,7 @@ pipeline {
         }
       }
     }
-    stage('DT Deploy Event') {
+    stage('DT Create Application') {
       steps {
         container("kubectl"){
           script{
