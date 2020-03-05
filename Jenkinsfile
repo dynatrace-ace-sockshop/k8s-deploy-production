@@ -52,5 +52,24 @@ pipeline {
         }
       }
     }
+    stage('DT Deploy Event') {
+      steps {
+        container("kubectl"){
+          script{
+            env.FRONT_END_IP = "${sh(script:'kubectl get svc front-end-ext -n production -o jsonpath=\'{.status.loadBalancer.ingress[0].ip}\'', returnStdout: true)}"
+          }
+        }
+        container("curl") {
+          script {
+            def status = dt_createUpdateAppDetectionRule (
+              dtAppName : "sockshop.production",
+              pattern : "http://${env.FRONT_END_IP}",
+              applicationMatchType: "CONTAINS",
+              applicationMatchTarget: "URL"
+            )
+          }
+        }
+      }
+    }
   }
 }
